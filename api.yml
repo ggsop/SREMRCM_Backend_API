@@ -1,0 +1,23 @@
+openapi: 3.0.3
+
+info:
+  title: SREMRCM Backend API
+  description: |-
+    This API handles the requests from the SREMRCM Frontend. It will handles such operations like data creation, data retrieval, users
+    The main purpose is to create a design that is decoupled and that is as modular as possible
+  contact:
+    email: op.gs.142857@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+  version: 0.0.1
+
+tags:
+  - name: News
+    description: All the endpoints and resources regarding News
+
+paths:
+  /news:
+    $ref: "./paths/news.yml"
