@@ -4,83 +4,34 @@
     "title": "SREMRCM Backend API",
     "description": "This API handles the requests from the SREMRCM Frontend. It will handles such operations like data creation, data retrieval, users\nThe main purpose is to create a design that is decoupled and that is as modular as possible",
     "contact": {
+      "name": "the API Dev Team",
       "email": "op.gs.142857@gmail.com"
     },
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
-  "tags": [
+  "servers": [
     {
-      "name": "News",
-      "description": "All the endpoints and resources regarding News"
+      "url": "SREMRCM-SANDBOX",
+      "description": "The SREMRCM sandbox API"
     }
   ],
-  "paths": {
-    "/news": {
-      "get": {
-        "description": "Gets a list of the news based on query parameters",
-        "operationId": "getNews",
-        "tags": [
-          "News"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/limit"
-          },
-          {
-            "$ref": "#/components/parameters/from"
-          },
-          {
-            "$ref": "#/components/parameters/to"
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/get-news"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
-      "post": {
-        "description": "Post a new object of type News",
-        "operationId": "postNews",
-        "tags": [
-          "News"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/authorization-key"
-          }
-        ],
-        "requestBody": {
-          "$ref": "#/components/requestBodies/post-news"
-        },
-        "responses": {
-          "201": {
-            "$ref": "#/components/responses/post-news"
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    }
-  },
   "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      },
+      "appId": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-APP-ID"
+      }
+    },
     "parameters": {
       "limit": {
         "in": "query",
@@ -114,16 +65,6 @@
         },
         "description": "The last index to which a certain data must be returned",
         "required": false
-      },
-      "authorization-key": {
-        "in": "header",
-        "name": "Authorization-Key",
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "description": "The key used by users in order to create/update certain data",
-        "required": true
       }
     },
     "schemas": {
@@ -243,6 +184,22 @@
           }
         }
       },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/meta"
+            },
+            "example": {
+              "meta": {
+                "status": "failed",
+                "message": "Authentication failed, access denied."
+              }
+            }
+          }
+        }
+      },
       "404": {
         "description": "Not Found",
         "content": {
@@ -326,6 +283,83 @@
           }
         },
         "required": true
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKey": [],
+      "appId": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "News",
+      "description": "All the endpoints and resources regarding News"
+    }
+  ],
+  "paths": {
+    "/api/v1/news": {
+      "get": {
+        "description": "Gets a list of the news based on query parameters",
+        "operationId": "getNews",
+        "summary": "Get the list of news posts based on query parameters",
+        "tags": [
+          "News"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/from"
+          },
+          {
+            "$ref": "#/components/parameters/to"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/get-news"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "description": "Post a new object of type News",
+        "operationId": "postNews",
+        "summary": "Post a new News object and create a resource in the database",
+        "tags": [
+          "News"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/post-news"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/post-news"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
       }
     }
   }
